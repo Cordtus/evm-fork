@@ -98,8 +98,17 @@ func (bn *BlockNumber) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// Int64 converts block number to primitive type
+// Int64 returns the raw block number as int64 without any adjustments.
+// Use this for logging, debugging, and displaying the original parameter value.
 func (bn BlockNumber) Int64() int64 {
+	return int64(bn)
+}
+
+// AdjustedInt64 converts block number to int64 with adjustments for querying:
+// - Negative values (special block parameters like "latest", "pending", "earliest") are converted to 0 (sentinel for latest block lookup)
+// - Zero (genesis) is converted to 1 (first queryable block in CometBFT)
+// - All other positive values are returned as-is
+func (bn BlockNumber) AdjustedInt64() int64 {
 	if bn < 0 {
 		return 0
 	} else if bn == 0 {
@@ -117,7 +126,7 @@ func (bn BlockNumber) CmtHeight() *int64 {
 		return nil
 	}
 
-	height := bn.Int64()
+	height := bn.AdjustedInt64()
 	return &height
 }
 
