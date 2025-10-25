@@ -33,7 +33,7 @@ func (b *Backend) GetCode(address common.Address, blockNrOrHash rpctypes.BlockNu
 		Address: address.String(),
 	}
 
-	res, err := b.QueryClient.Code(rpctypes.ContextWithHeight(blockNum.Int64()), req)
+	res, err := b.QueryClient.Code(rpctypes.ContextWithHeight(blockNum.AdjustedInt64()), req)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +135,7 @@ func (b *Backend) GetStorageAt(address common.Address, key string, blockNrOrHash
 		Key:     key,
 	}
 
-	res, err := b.QueryClient.Storage(rpctypes.ContextWithHeight(blockNum.Int64()), req)
+	res, err := b.QueryClient.Storage(rpctypes.ContextWithHeight(blockNum.AdjustedInt64()), req)
 	if err != nil {
 		return nil, err
 	}
@@ -160,7 +160,7 @@ func (b *Backend) GetBalance(address common.Address, blockNrOrHash rpctypes.Bloc
 		return nil, err
 	}
 
-	res, err := b.QueryClient.Balance(rpctypes.ContextWithHeight(blockNum.Int64()), req)
+	res, err := b.QueryClient.Balance(rpctypes.ContextWithHeight(blockNum.AdjustedInt64()), req)
 	if err != nil {
 		return nil, err
 	}
@@ -185,7 +185,7 @@ func (b *Backend) GetTransactionCount(address common.Address, blockNum rpctypes.
 	if err != nil {
 		return &n, err
 	}
-	height := blockNum.Int64()
+	height := blockNum.AdjustedInt64()
 
 	currentHeight := int64(bn) //#nosec G115 -- checked for int overflow already
 	if height > currentHeight {
@@ -206,7 +206,7 @@ func (b *Backend) GetTransactionCount(address common.Address, blockNum rpctypes.
 	}
 
 	includePending := blockNum == rpctypes.EthPendingBlockNumber
-	nonce, err := b.getAccountNonce(address, includePending, blockNum.Int64(), b.Logger)
+	nonce, err := b.getAccountNonce(address, includePending, blockNum.AdjustedInt64(), b.Logger)
 	if err != nil {
 		return nil, err
 	}

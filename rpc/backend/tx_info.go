@@ -553,7 +553,7 @@ func (b *Backend) initAccessListTracer(args evmtypes.TransactionArgs, blockNum r
 
 	if args.Nonce == nil {
 		pending := blockNum == rpctypes.EthPendingBlockNumber
-		nonce, err := b.getAccountNonce(args.GetFrom(), pending, blockNum.Int64(), b.Logger)
+		nonce, err := b.getAccountNonce(args.GetFrom(), pending, blockNum.AdjustedInt64(), b.Logger)
 		if err != nil {
 			b.Logger.Error("failed to get account nonce", "error", err)
 			return nil, nil, err

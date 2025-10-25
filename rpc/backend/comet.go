@@ -83,7 +83,7 @@ func (b *Backend) getHeightByBlockNum(blockNum rpctypes.BlockNumber) (int64, err
 		return status.SyncInfo.EarliestBlockHeight, nil
 	}
 
-	height := blockNum.Int64()
+	height := blockNum.AdjustedInt64()
 	if height <= 0 {
 		// In cometBFT, LatestBlockNumber, FinalizedBlockNumber, SafeBlockNumber all map to the latest block height.
 		// Fetch the latest block number from the app state, more accurate than the CometBFT block store state.
